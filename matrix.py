@@ -11,6 +11,7 @@ class View:
         curses.start_color()
         curses.use_default_colors()
         curses.init_pair(1,curses.COLOR_GREEN,-1)
+        curses.init_pair(2,curses.COLOR_WHITE,-1)
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
@@ -21,7 +22,7 @@ class View:
         curses.echo()
         curses.curs_set(1)
         curses.endwin()
-    def displayMatrix(self,matrix):
+    def displayMatrix(self,matrix,highlight=[]):
         self.screen.erase()
         for y in range(len(matrix)):
             for x in range(len(matrix[y])):
@@ -31,10 +32,17 @@ class View:
                         #    f=open('log.txt','a')
                         #    f.write(str(x)+'\t'+str(y)+'\n')
                         #    f.close()
+        
+        for i in range(len(highlight)):
+            y=highlight[i]
+            if y!=-1 and y<len(matrix):
+                self.screen.addstr(y,i,matrix[y][i],curses.color_pair(2)|curses.A_BOLD)
+                
         self.screen.refresh()
         return
     def getScreenYX(self):
         return self.screen.getmaxyx()
+
     def displayText(self,y,x,text):
         #self.screen.erase()
         self.screen.addstr(y,x,text,curses.color_pair(1)|curses.A_BOLD)
@@ -74,7 +82,7 @@ class Matrix:
         self.matrix.pop(-1)
         self.matrix.insert(0,line)
     def mutate(self):
-        quantity=random.randint(0, 50)
+        quantity=random.randint(0, 30)
         for i in range(quantity):
             rx=random.randint(0,self.x-1)
             ry=random.randint(0,self.y-1)
@@ -86,6 +94,8 @@ class Matrix:
         self.fill()
         self.mutate()
         return self.matrix
+    def getPositions(self):
+        return self.position
     def genText(self):
         pass
 
@@ -108,7 +118,7 @@ m=Matrix(y-1,x-1)
 
 
 while(1):
-    v.displayMatrix(m.refresh())
+    v.displayMatrix(m.refresh(),m.getPositions())
 #v.displayMatrix([['s','d','w'],['o','f','e']])
     time.sleep(0.1)
 
