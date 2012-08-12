@@ -64,11 +64,12 @@ class Matrix:
         random.seed()
     def promote(self):
         for i in range(len(self.position)):
-            if self.position[i]==-1:
-                if random.random()<self.promoteChance:
-                    self.position[i]=0
+            #if self.position[i]==-1:
+            if random.random()<self.promoteChance:
+                self.position[i]=0
             else:
-                self.position[i]+=1
+                if self.position[i]!=-1:
+                    self.position[i]+=1
                 if self.position[i]==len(self.text):
                     self.position[i]=-1
     
